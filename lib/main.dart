@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Namer App',
         theme: ThemeData(
           useMaterial3: true,
@@ -116,35 +117,23 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          NavigationRail(
-            extended: false,
-            destinations: [
-              NavigationRailDestination(
-                icon: Icon(Icons.home),
-                label: Text('Home'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.search),
-                label: Text('Search'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.person),
-                label: Text('Profile'),
-              ),
-            ],
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (int value) {
-              setState(() {
-                _selectedIndex = value;
-              });
-            },
-          ),
-          VerticalDivider(thickness: 1, width: 1),
-          Expanded(
-            child: _buildPageForIndex(_selectedIndex),
-          ),
+      body: Center(
+    
+          child: _buildPageForIndex(_selectedIndex),
+        
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
+
         ],
       ),
     );
