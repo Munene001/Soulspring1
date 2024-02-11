@@ -12,6 +12,7 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   late Future<List<Map<String, dynamic>>> searchData;
   List<Map<String, dynamic>> originalData = [];
+  bool isVisible = false;
 
   @override
   void initState() {
@@ -21,11 +22,13 @@ class _SearchState extends State<Search> {
 
   Future<List<Map<String, dynamic>>> fetchData() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.0.105:3000/api/data'));
+      final response =
+          await http.get(Uri.parse('http://192.168.0.105:3000/api/data'));
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
-        final List<Map<String, dynamic>> mappedData = jsonData.cast<Map<String, dynamic>>();
+        final List<Map<String, dynamic>> mappedData =
+            jsonData.cast<Map<String, dynamic>>();
         originalData = mappedData;
         return mappedData;
       } else {
@@ -62,8 +65,14 @@ class _SearchState extends State<Search> {
     if (query.isNotEmpty) {
       filteredData = filterData(query);
     }
-    
+
     return filteredData;
+  }
+
+  void toggleVisibility() {
+    setState(() {
+      isVisible = !isVisible;
+    });
   }
 
   @override
@@ -74,42 +83,52 @@ class _SearchState extends State<Search> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      searchData = Future.value(filterDataByGender('Male'));
-                    });
-                  },
-                  child: Text('Male'),
+                Expanded(
+                  child: TextField(
+                    onChanged: (query) {
+                      setState(() {
+                        searchData = Future.value(applyFilters(query, ''));
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Search',
+                      hintText: 'Enter Keywords...',
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      searchData = Future.value(filterDataByGender('Female'));
-                    });
-                  },
-                  child: Text('Female'),
+                SizedBox(
+                  width: 10,
+                ),
+                IconButton(
+                  onPressed: toggleVisibility,
+                  icon: Icon(Icons.filter),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: TextField(
-              onChanged: (query) {
-                setState(() {
-                  searchData = Future.value(applyFilters(query, ''));
-                });
-              },
-              decoration: InputDecoration(
-                labelText: 'Search',
-                hintText: 'Enter Keywords...',
-                prefixIcon: Icon(Icons.search),
+          if (isVisible)
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 16, 0),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: FilterButtons(
+                  isVisible: isVisible,
+                  onFemalePressed: () {
+                    setState(() {
+                      filterDataByGender("female");
+                    });
+                  },
+                  onMalePressed: () {
+                    setState(() {
+                      filterDataByGender("male");
+                    });
+                  },
+                  
+                ),
               ),
             ),
-          ),
           FutureBuilder<List<Map<String, dynamic>>>(
             future: searchData,
             builder: (context, snapshot) {
@@ -140,6 +159,35 @@ class _SearchState extends State<Search> {
               }
             },
           )
+        ],
+      ),
+    );
+  }
+}
+
+class FilterButtons extends StatelessWidget {
+  final bool isVisible;
+  final VoidCallback onMalePressed;
+  final VoidCallback onFemalePressed;
+  
+
+  const FilterButtons({
+    Key? key,
+    required this.isVisible,
+    required this.onMalePressed,
+    required this.onFemalePressed,
+  
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: isVisible,
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          ElevatedButton(onPressed: onMalePressed, child: Text("Male")),
+          ElevatedButton(onPressed: onFemalePressed, child: Text("Female")),
         ],
       ),
     );
