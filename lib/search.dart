@@ -23,7 +23,7 @@ class _SearchState extends State<Search> {
   Future<List<Map<String, dynamic>>> fetchData() async {
     try {
       final response =
-          await http.get(Uri.parse('http://192.168.0.105:3000/api/data'));
+          await http.get(Uri.parse('http://192.168.1.112:3000/api/data'));
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
@@ -57,10 +57,18 @@ class _SearchState extends State<Search> {
     return originalData.where((item) => item['gender'] == gender).toList();
   }
 
-  List<Map<String, dynamic>> applyFilters(String query, String genderFilter) {
+  List<Map<String, dynamic>> filterDataByCity(String city) {
+    return originalData.where((item) => item['city'] == city).toList();
+  }
+
+  List<Map<String, dynamic>> applyFilters(
+      String query, String genderFilter, String cityFilter) {
     List<Map<String, dynamic>> filteredData = originalData;
     if (genderFilter.isNotEmpty) {
       filteredData = filterDataByGender(genderFilter);
+    }
+    if (cityFilter.isNotEmpty) {
+      filteredData = filterDataByCity(cityFilter);
     }
     if (query.isNotEmpty) {
       filteredData = filterData(query);
@@ -77,18 +85,27 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              children: [
-                Expanded(
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Expanded(
+              flex: 7,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(60.0),
+                        topRight: Radius.circular(60.0),
+                        bottomLeft: Radius.circular(60.0),
+                        bottomRight: Radius.circular(60.0)),
+                  ),
                   child: TextField(
                     onChanged: (query) {
                       setState(() {
-                        searchData = Future.value(applyFilters(query, ''));
+                        searchData = Future.value(applyFilters(query, '', ''));
                       });
                     },
                     decoration: InputDecoration(
@@ -98,50 +115,30 @@ class _SearchState extends State<Search> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                IconButton(
-                  onPressed: toggleVisibility,
-                  icon: Icon(Icons.filter),
-                ),
-              ],
-            ),
-          ),
-          if (isVisible)
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 16, 0),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: FilterButtons(
-                  isVisible: isVisible,
-                  onFemalePressed: () {
-                    setState(() {
-                      filterDataByGender("female");
-                    });
-                  },
-                  onMalePressed: () {
-                    setState(() {
-                      filterDataByGender("male");
-                    });
-                  },
-                  
-                ),
               ),
             ),
-          FutureBuilder<List<Map<String, dynamic>>>(
-            future: searchData,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                return SizedBox(
-                  height: 640,
-                  child: ListView.builder(
+            IconButton(
+              onPressed: toggleVisibility,
+              icon: Icon(Icons.filter_list),
+            ),
+          ],
+        ),
+      ),
+      body: Row(
+        children: [
+          Expanded(
+            flex: 7,
+            child: FutureBuilder<List<Map<String, dynamic>>>(
+              future: searchData,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  return ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final item = snapshot.data![index];
@@ -150,15 +147,56 @@ class _SearchState extends State<Search> {
                         subtitle: Text('Gender: ${item['gender']}'),
                       );
                     },
-                  ),
-                );
-              } else {
-                return Center(
-                  child: Text('No data available.'),
-                );
-              }
-            },
-          )
+                  );
+                } else {
+                  return Center(
+                    child: Text('No data available.'),
+                  );
+                }
+              },
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: FilterButtons(
+              isVisible: isVisible,
+              onFemalePressed: () {
+                setState(() {
+                  searchData = Future.value(filterDataByGender('Female'));
+                });
+              },
+              onMalePressed: () {
+                setState(() {
+                  searchData = Future.value(filterDataByGender('Male'));
+                });
+              },
+              onNairobiPressed: () {
+                setState(() {
+                  searchData = Future.value(filterDataByCity('Nairobi'));
+                });
+              },
+              onMombasaPressed: () {
+                setState(() {
+                  searchData = Future.value(filterDataByCity('Mombasa'));
+                });
+              },
+              onKisumuPressed: () {
+                setState(() {
+                  searchData = Future.value(filterDataByCity('Nakuru'));
+                });
+              },
+              onNakuruPressed: () {
+                setState(() {
+                  searchData = Future.value(filterDataByCity('Kisumu'));
+                });
+              },
+              onEldoretPressed: () {
+                setState(() {
+                  searchData = Future.value(filterDataByCity('Eldoret'));
+                });
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -169,25 +207,38 @@ class FilterButtons extends StatelessWidget {
   final bool isVisible;
   final VoidCallback onMalePressed;
   final VoidCallback onFemalePressed;
-  
+  final VoidCallback onNairobiPressed;
+  final VoidCallback onMombasaPressed;
+  final VoidCallback onKisumuPressed;
+  final VoidCallback onNakuruPressed;
+  final VoidCallback onEldoretPressed;
 
   const FilterButtons({
     Key? key,
     required this.isVisible,
     required this.onMalePressed,
     required this.onFemalePressed,
-  
+    required this.onNairobiPressed,
+    required this.onMombasaPressed,
+    required this.onKisumuPressed,
+    required this.onNakuruPressed,
+    required this.onEldoretPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return Visibility(
       visible: isVisible,
-      child: ListView(
-        shrinkWrap: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ElevatedButton(onPressed: onMalePressed, child: Text("Male")),
           ElevatedButton(onPressed: onFemalePressed, child: Text("Female")),
+          ElevatedButton(onPressed: onNairobiPressed, child: Text("Nairobi")),
+          ElevatedButton(onPressed: onMombasaPressed, child: Text("Mombasa")),
+          ElevatedButton(onPressed: onKisumuPressed, child: Text("Kisumu")),
+          ElevatedButton(onPressed: onNakuruPressed, child: Text("Nakuru")),
+          ElevatedButton(onPressed: onEldoretPressed, child: Text("Eldoret")),
         ],
       ),
     );
