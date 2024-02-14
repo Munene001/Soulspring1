@@ -23,7 +23,7 @@ class _SearchState extends State<Search> {
   Future<List<Map<String, dynamic>>> fetchData() async {
     try {
       final response =
-          await http.get(Uri.parse('http://192.168.1.112:3000/api/data'));
+          await http.get(Uri.parse('http://192.168.0.105:3000/api/data'));
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
@@ -143,9 +143,9 @@ class _SearchState extends State<Search> {
                     itemBuilder: (context, index) {
                       final item = snapshot.data![index];
                       return ListTile(
-                        title: Text('Name: ${item['first_name']}'),
-                        subtitle: Text('Gender: ${item['gender']}'),
-                      );
+                          title: Text('Name: ${item['first_name']}'),
+                          subtitle: Text('Gender: ${item['gender']}'),
+                          trailing:Icon(Icons.arrow_forward));
                     },
                   );
                 } else {
@@ -244,3 +244,5 @@ class FilterButtons extends StatelessWidget {
     );
   }
 }
+
+
