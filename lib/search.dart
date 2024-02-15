@@ -124,40 +124,39 @@ class _SearchState extends State<Search> {
           ],
         ),
       ),
-      body: Row(
+      body: Stack(
         children: [
-          Expanded(
-            flex: 7,
-            child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: searchData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      final item = snapshot.data![index];
-                      return ListTile(
-                          title: Text('Name: ${item['first_name']}'),
-                          subtitle: Text('Gender: ${item['gender']}'),
-                          trailing:Icon(Icons.arrow_forward));
-                    },
-                  );
-                } else {
-                  return Center(
-                    child: Text('No data available.'),
-                  );
-                }
-              },
-            ),
+          FutureBuilder<List<Map<String, dynamic>>>(
+            future: searchData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    final item = snapshot.data![index];
+                    final opacity = index.isOdd ? 0.2 : 0.1;
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: ListWidget(item: item, opacity: opacity),
+                    );
+                  },
+                );
+              } else {
+                return Center(
+                  child: Text('No data available.'),
+                );
+              }
+            },
           ),
-          Expanded(
-            flex: 3,
+          Positioned(
+            top: 0,
+            right: 0,
             child: FilterButtons(
               isVisible: isVisible,
               onFemalePressed: () {
@@ -203,6 +202,27 @@ class _SearchState extends State<Search> {
   }
 }
 
+class ListWidget extends StatelessWidget {
+  final Map<String, dynamic> item;
+  final double opacity;
+
+  const ListWidget({Key? key, required this.item, required this.opacity});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(Icons.person),
+      title: Text('Name: ${item['first_name']}'),
+      subtitle: Text('Gender: ${item['gender']}'),
+      tileColor: Colors.brown[300]?.withOpacity(opacity),
+      trailing: Icon(Icons.arrow_forward),
+      onTap: () {
+        // Handle onTap action here
+      },
+    );
+  }
+}
+
 class FilterButtons extends StatelessWidget {
   final bool isVisible;
   final VoidCallback onMalePressed;
@@ -229,20 +249,21 @@ class FilterButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Visibility(
       visible: isVisible,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ElevatedButton(onPressed: onMalePressed, child: Text("Male")),
-          ElevatedButton(onPressed: onFemalePressed, child: Text("Female")),
-          ElevatedButton(onPressed: onNairobiPressed, child: Text("Nairobi")),
-          ElevatedButton(onPressed: onMombasaPressed, child: Text("Mombasa")),
-          ElevatedButton(onPressed: onKisumuPressed, child: Text("Kisumu")),
-          ElevatedButton(onPressed: onNakuruPressed, child: Text("Nakuru")),
-          ElevatedButton(onPressed: onEldoretPressed, child: Text("Eldoret")),
-        ],
+      child: SizedBox(
+        width: 120,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ElevatedButton(onPressed: onMalePressed, child: Text("Male")),
+            ElevatedButton(onPressed: onFemalePressed, child: Text("Female")),
+            ElevatedButton(onPressed: onNairobiPressed, child: Text("Nairobi")),
+            ElevatedButton(onPressed: onMombasaPressed, child: Text("Mombasa")),
+            ElevatedButton(onPressed: onKisumuPressed, child: Text("Kisumu")),
+            ElevatedButton(onPressed: onNakuruPressed, child: Text("Nakuru")),
+            ElevatedButton(onPressed: onEldoretPressed, child: Text("Eldoret")),
+          ],
+        ),
       ),
     );
   }
 }
-
-
