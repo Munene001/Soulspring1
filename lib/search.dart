@@ -117,9 +117,20 @@ class _SearchState extends State<Search> {
                 ),
               ),
             ),
-            IconButton(
-              onPressed: toggleVisibility,
-              icon: Icon(Icons.filter_list),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Filter",
+                  style: TextStyle(color: Colors.green, fontSize: 12),
+                ),
+                IconButton(
+                  onPressed: toggleVisibility,
+                  icon: Icon(Icons.filter_list, color: Colors.green),
+                ),
+                // Adjust the height as needed
+              ],
             ),
           ],
         ),
@@ -140,10 +151,11 @@ class _SearchState extends State<Search> {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
                     final item = snapshot.data![index];
-                    final opacity = index.isOdd ? 0.2 : 0.1;
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: ListWidget(item: item, opacity: opacity),
+                      child: ListWidget(
+                        item: item,
+                      ),
                     );
                   },
                 );
@@ -204,18 +216,26 @@ class _SearchState extends State<Search> {
 
 class ListWidget extends StatelessWidget {
   final Map<String, dynamic> item;
-  final double opacity;
 
-  const ListWidget({Key? key, required this.item, required this.opacity});
+  const ListWidget({
+    Key? key,
+    required this.item,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.person),
-      title: Text('Name: ${item['first_name']}'),
-      subtitle: Text('Gender: ${item['gender']}'),
-      tileColor: Colors.brown[300]?.withOpacity(opacity),
-      trailing: Icon(Icons.arrow_forward),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+        side: BorderSide(color: Colors.green.withOpacity(0.1)),
+      ),
+      leading: CircleAvatar(
+        backgroundColor: Colors.green,
+        radius: 5,
+      ),
+      title: Text(' ${item['first_name']} ${item['last_name']} '),
+      subtitle: Text(' ${item['speciality']}'),
+      trailing: Icon(Icons.arrow_forward, color: Colors.green),
       onTap: () {
         // Handle onTap action here
       },
@@ -232,8 +252,16 @@ class FilterButtons extends StatelessWidget {
   final VoidCallback onKisumuPressed;
   final VoidCallback onNakuruPressed;
   final VoidCallback onEldoretPressed;
+  final ButtonStyle customButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: Colors.green[600],
+    foregroundColor: Colors.white,
+    elevation: 5,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30),
+    ),
+  );
 
-  const FilterButtons({
+  FilterButtons({
     Key? key,
     required this.isVisible,
     required this.onMalePressed,
@@ -254,13 +282,43 @@ class FilterButtons extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ElevatedButton(onPressed: onMalePressed, child: Text("Male")),
-            ElevatedButton(onPressed: onFemalePressed, child: Text("Female")),
-            ElevatedButton(onPressed: onNairobiPressed, child: Text("Nairobi")),
-            ElevatedButton(onPressed: onMombasaPressed, child: Text("Mombasa")),
-            ElevatedButton(onPressed: onKisumuPressed, child: Text("Kisumu")),
-            ElevatedButton(onPressed: onNakuruPressed, child: Text("Nakuru")),
-            ElevatedButton(onPressed: onEldoretPressed, child: Text("Eldoret")),
+            ElevatedButton(
+              onPressed: onMalePressed,
+              style: customButtonStyle,
+              child: Text("Male"),
+            ),
+            ElevatedButton(
+              onPressed: onFemalePressed,
+              style: customButtonStyle,
+              child: Text(
+                "Female",
+              ),
+            ),
+            ElevatedButton(
+              onPressed: onNairobiPressed,
+              style: customButtonStyle,
+              child: Text("Nairobi"),
+            ),
+            ElevatedButton(
+              onPressed: onMombasaPressed,
+              style: customButtonStyle,
+              child: Text("Mombasa"),
+            ),
+            ElevatedButton(
+              onPressed: onKisumuPressed,
+              style: customButtonStyle,
+              child: Text("Kisumu"),
+            ),
+            ElevatedButton(
+              onPressed: onNakuruPressed,
+              style: customButtonStyle,
+              child: Text("Nakuru"),
+            ),
+            ElevatedButton(
+              onPressed: onEldoretPressed,
+              style: customButtonStyle,
+              child: Text("Eldoret"),
+            ),
           ],
         ),
       ),
