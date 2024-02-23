@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'therapist.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -237,6 +238,13 @@ class ListWidget extends StatelessWidget {
       subtitle: Text(' ${item['speciality']}'),
       trailing: Icon(Icons.arrow_forward, color: Colors.green),
       onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Therapist(),
+          ),
+        );
+
         // Handle onTap action here
       },
     );
