@@ -24,7 +24,7 @@ class _SearchState extends State<Search> {
   Future<List<Map<String, dynamic>>> fetchData() async {
     try {
       final response =
-          await http.get(Uri.parse('http://192.168.0.105:3000/api/data'));
+          await http.get(Uri.parse('http://192.168.0.108:3000/api/data'));
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
