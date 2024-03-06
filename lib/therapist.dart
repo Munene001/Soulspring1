@@ -1,53 +1,88 @@
+
 import 'package:flutter/material.dart';
 
 class Therapist extends StatelessWidget {
-  const Therapist({super.key});
+  const Therapist({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(360),
-          child: AppBar(
-              title: Text('Therapist'),
-              flexibleSpace: Stack(
-                children: [
-                  Container(
-                    height: 180,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            const Color.fromARGB(255, 27, 94, 32),
-                            Colors.green
-                          ]),
-                    ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(360),
+        child: AppBar(
+          title: Padding(
+            padding: const EdgeInsets.fromLTRB(72, 0, 0, 0),
+            child: Text(
+              'Therapist',
+              style:
+                  TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
+            ),
+
+          ),
+          backgroundColor: Colors.grey[200],
+          flexibleSpace: Stack(
+            
+            children: [
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      const Color.fromARGB(255, 27, 94, 32),
+                      Colors.green,
+                    ],
                   ),
-                  Positioned(
-                    top: 120,
-                    left: MediaQuery.of(context).size.width / 2 - 60,
-                    child: Container(
-                      height: 120,
-                      width: 120,
-                      decoration: BoxDecoration(shape: BoxShape.circle),
-                      child: ClipOval(
-                        child: Image.network(
-                          'https://plus.unsplash.com/premium_photo-1705091980967-c21193be0dd3?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                          fit: BoxFit.cover,
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 120, 0, 0),
+                  
+                  
+                  child: Column(
+                    children: [
+                      Material(
+                        elevation: 8,
+                        clipBehavior: Clip.antiAlias,
+                        shape: CircleBorder(
+                            side: BorderSide(
+                          color: Colors.blue,
+                          width: 3.0,
+                        )),
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            'https://plus.unsplash.com/premium_photo-1705091980967-c21193be0dd3?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                          ),
+                          radius: 80,
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 9,
+                      ),
+                      Text('Jenice Akinyi',style: TextStyle(
+                        fontSize: 20, color: Colors.brown[900]
+                      ),),
+                      SizedBox(
+                        height: 3,
+                      ),
+                      Text('Nairobi',style: TextStyle(
+                        fontSize: 15, color: Colors.brown,
+                      ),)
+                    ],
                   ),
-                ],
-              )),
+                ),
+              ),
+            ],
+          ),
         ),
-        body: Stack(
-          children: [
-            Container(
-              color: Colors.transparent,
-            )
-          ],
-        ));
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+        ),
+      )
+    );
   }
 }
