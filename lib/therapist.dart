@@ -8,7 +8,7 @@ class Therapist extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(360),
+        preferredSize: Size.fromHeight(380),
         child: AppBar(
           title: Padding(
             padding: const EdgeInsets.fromLTRB(72, 0, 0, 0),
@@ -69,8 +69,48 @@ class Therapist extends StatelessWidget {
                       ),
                       Text('Nairobi',style: TextStyle(
                         fontSize: 15, color: Colors.brown,
-                      ),)
+                      ),),
+                      SizedBox(height: 10,),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(92, 0, 0, 0),
+                        child: Row(
+                        
+                        children: [
+                          Chip(label: Text('Consult'),
+                          
+                          avatar:CircleAvatar(
+                            backgroundColor: Colors.green,
+                            
+                            child: Icon(
+                              Icons.chat_bubble_outline,
+                              color: Colors.white,
+                               size: 15,
+                              
+                                    
+                            ),
+                                    
+                          ) ,),
+                          SizedBox( width: 10,),
+                          Chip(label: Text('Follow'),
+                          avatar:CircleAvatar(
+                            backgroundColor: Colors.green,
+                            
+                            
+                            child: Icon(
+                              Icons.person_add,
+                              color: Colors.white,
+                              size: 13,
+                            ),
+                                    
+                          ) ,),
+                          
+                        ],
+                        ),
+                      )
+                      
                     ],
+                    
+
                   ),
                 ),
               ),
@@ -81,8 +121,27 @@ class Therapist extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           color: Colors.grey[200],
+          
         ),
-      )
+        
+          
+            
+              child: Myprofile()
+            ),
+          
+        
+      );
+  }
+}
+class Myprofile extends StatelessWidget {
+  const Myprofile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      
+
+      
     );
   }
 }
