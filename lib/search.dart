@@ -124,11 +124,11 @@ class _SearchState extends State<Search> {
               children: [
                 Text(
                   "Filter",
-                  style: TextStyle(color: Colors.green, fontSize: 12),
+                  style: TextStyle(color:Colors.green, fontSize: 12),
                 ),
                 IconButton(
                   onPressed: toggleVisibility,
-                  icon: Icon(Icons.filter_list, color: Colors.green),
+                  icon: Icon(Icons.filter_list, color:Colors.deepOrange[300]),
                 ),
                 // Adjust the height as needed
               ],
@@ -231,17 +231,17 @@ class ListWidget extends StatelessWidget {
         side: BorderSide(color: Colors.green.withOpacity(0.1)),
       ),
       leading: CircleAvatar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.deepOrange[300],
         radius: 5,
       ),
       title: Text(' ${item['first_name']} ${item['last_name']} '),
       subtitle: Text(' ${item['speciality']}'),
-      trailing: Icon(Icons.arrow_forward, color: Colors.green),
+      trailing: Icon(Icons.arrow_forward, color:Colors.green ),
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Therapist(),
+            builder: (context) => Therapist(item:item),
           ),
         );
 

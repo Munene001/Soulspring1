@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       create: (context) => MyAppState(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Namer App',
+        title: 'Soulspring App',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
@@ -97,7 +97,7 @@ class Bigcard extends StatelessWidget {
     );
 
     return Card(
-      color: theme.colorScheme.primary,
+      color: Colors.deepOrange.shade300,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Text(pair.asLowerCase,
