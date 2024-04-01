@@ -2,14 +2,14 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'search.dart';
+import 'login.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.
-  key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         ),
-        home: MyHomePage(),
+        home: Login(),
       ),
     );
   }
@@ -119,9 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-    
-          child: _buildPageForIndex(_selectedIndex),
-        
+        child: _buildPageForIndex(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
@@ -134,7 +132,6 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
-
         ],
       ),
     );
