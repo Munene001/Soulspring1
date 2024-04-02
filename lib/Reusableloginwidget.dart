@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget reusableTextField(String text, bool isPasswordType, IconData icon,
+Widget ReusableTextField(String text, bool isPasswordType, IconData icon,
     TextEditingController controller) {
   return TextField(
     controller: controller,

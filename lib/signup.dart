@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:namer_app/login.dart';
+import 'package:http/http.dart' as http;
+import 'package:namer_app/main.dart';
 import 'Reusableloginwidget.dart';
 
 class Signup extends StatefulWidget {
@@ -11,8 +14,30 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   TextEditingController _emailTextController = TextEditingController();
-  TextEditingController _usernameTextController = TextEditingController();
+  TextEditingController _firstNameTextController = TextEditingController();
+  TextEditingController _lastNameTextController = TextEditingController();
+
   TextEditingController _passwordTextController = TextEditingController();
+
+  Future<void> _signup(BuildContext context) async {
+    final url = Uri.parse('http://192.168.0.108:3000/api/signup');
+    final response = await http.post(
+      url,
+      body: json.encode({
+        'firstname': _firstNameTextController.text,
+        'lastname': _lastNameTextController.text,
+        'email': _emailTextController.text,
+        'password': _passwordTextController.text,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 201) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+    }
+     else {
+    print('Failed to create user: ${response.statusCode}');
+  }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +48,7 @@ class _SignupState extends State<Signup> {
             gradient: LinearGradient(
               colors: [
                 const Color.fromARGB(255, 27, 94, 32).withOpacity(0.9),
-                        Colors.green.withOpacity(0.9),
+                Colors.green.withOpacity(0.9),
               ],
             ),
           ),
@@ -32,23 +57,23 @@ class _SignupState extends State<Signup> {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
-                child: reusableTextField('enter firstname', false,
-                    Icons.person_2_outlined, _usernameTextController),
+                child: ReusableTextField('enter firstname', false,
+                    Icons.person_2_outlined, _firstNameTextController),
               ),
               SizedBox(
                 height: 8,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
-                child: reusableTextField('enter lastname', false,
-                    Icons.person_2_outlined, _usernameTextController),
+                child: ReusableTextField('enter lastname', false,
+                    Icons.person_2_outlined, _lastNameTextController),
               ),
               SizedBox(
                 height: 8,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
-                child: reusableTextField('enter email', false,
+                child: ReusableTextField('enter email', false,
                     Icons.email_rounded, _emailTextController),
               ),
               SizedBox(
@@ -56,7 +81,7 @@ class _SignupState extends State<Signup> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
-                child: reusableTextField('enter password', true,
+                child: ReusableTextField('enter password', true,
                     Icons.password_outlined, _passwordTextController),
               ),
               SizedBox(
@@ -65,8 +90,7 @@ class _SignupState extends State<Signup> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
                 child: loginButton(false, () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Login()));
+                  _signup(context);
                 }),
               ),
             ],

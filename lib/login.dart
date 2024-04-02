@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:namer_app/Reusableloginwidget.dart';
 import 'package:namer_app/main.dart';
 import 'signup.dart';
@@ -13,6 +16,24 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController _emailTextController = TextEditingController();
   TextEditingController _passwordTextController = TextEditingController();
+
+  Future<void> _login(BuildContext context) async {
+    final url = Uri.parse('http://192.168.0.108:3000/api/login');
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'email': _emailTextController.text,
+        'password': _passwordTextController.text,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 201) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MyHomePage()));
+    } else {
+      print('Failed to login: ${response.statusCode}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +53,7 @@ class _LoginState extends State<Login> {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
-                child: reusableTextField(
+                child: ReusableTextField(
                     'enter email', false, Icons.email, _emailTextController),
               ),
               SizedBox(
@@ -40,7 +61,7 @@ class _LoginState extends State<Login> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
-                child: reusableTextField('enter password', true,
+                child: ReusableTextField('enter password', true,
                     Icons.password_outlined, _passwordTextController),
               ),
               SizedBox(
@@ -49,8 +70,7 @@ class _LoginState extends State<Login> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
                 child: loginButton(true, () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyHomePage()));
+                  _login(context);
                 }),
               ),
               SizedBox(height: 7),
