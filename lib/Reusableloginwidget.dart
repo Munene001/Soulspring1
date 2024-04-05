@@ -12,7 +12,7 @@ Widget ReusableTextField(String text, bool isPasswordType, IconData icon,
       color: Colors.white.withOpacity(0.9),
     ),
     decoration: InputDecoration(
-      prefixIcon: Icon(icon, color: Colors.white70.withOpacity(0.9),),
+      prefixIcon: Icon(icon, color:Colors.deepOrange.shade700),
       labelText: text,
       labelStyle: TextStyle(color: Colors.white70.withOpacity(0.9),),
       filled: true,

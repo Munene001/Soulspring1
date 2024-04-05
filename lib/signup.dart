@@ -21,6 +21,7 @@ class _SignupState extends State<Signup> {
 
   Future<void> _signup(BuildContext context) async {
     final url = Uri.parse('http://192.168.0.108:3000/api/signup');
+    
     final response = await http.post(
       url,
       body: json.encode({
@@ -32,16 +33,46 @@ class _SignupState extends State<Signup> {
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 201) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MyHomePage()));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.thumb_up, color: Colors.deepOrange[300]),
+            SizedBox(
+              width: 30,
+            ),
+            Text('Signup Succesfull', style: TextStyle(color: Colors.green),)
+          ],
+        ),
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.black.withOpacity(0.5),
+
+      ));
+    } else {
+      print('Failed to login: ${response.statusCode}');
+
+      
     }
-     else {
-    print('Failed to create user: ${response.statusCode}');
-  }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title:  Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: Text('Sign Up',style: TextStyle(color: Colors.white),),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              const Color.fromARGB(255, 27, 94, 32).withOpacity(0.9),
+                Colors.green.withOpacity(0.9),
+            ])
+          ),
+        ),
+      ),
       body: Center(
         child: Container(
           decoration: BoxDecoration(
@@ -75,6 +106,7 @@ class _SignupState extends State<Signup> {
                 padding: EdgeInsets.symmetric(horizontal: 40.0),
                 child: ReusableTextField('enter email', false,
                     Icons.email_rounded, _emailTextController),
+                     
               ),
               SizedBox(
                 height: 8,

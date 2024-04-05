@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 
 class Therapist extends StatefulWidget {
@@ -9,6 +12,52 @@ class Therapist extends StatefulWidget {
 }
 
 class _TherapistState extends State<Therapist> {
+  Future<void> sendemails() async {
+    final String therapistEmail = widget.item['email'];
+    final url = Uri.parse('http://192.168.0.108:3000/api/consult');
+
+    final response = await http.post(url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(<String, String>{
+          'therapistEmail': therapistEmail,
+        }));
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.thumb_up, color: Colors.deepOrange[300]),
+            SizedBox(
+              width: 30,
+            ),
+            Text(
+                'Consultation applied Successfully, await response on your email'),
+          ],
+        ),
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.black.withOpacity(0.5),
+      ));
+    }
+    else if (response.statusCode == 401){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.thumb_down, color: Colors.deepOrange[300]),
+            SizedBox(
+              width: 30,
+            ),
+            Text(
+                'User is not logged in'),
+          ],
+        ),
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.black.withOpacity(0.5),
+      ));
+
+
+    }
+  }
+  bool selected = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,9 +113,8 @@ class _TherapistState extends State<Therapist> {
                           width: 3.0,
                         )),
                         child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            '${widget.item['profileimage']}'
-                          ),
+                          backgroundImage:
+                              NetworkImage('${widget.item['profileimage']}'),
                           radius: 80,
                         ),
                       ),
@@ -95,7 +143,7 @@ class _TherapistState extends State<Therapist> {
                         padding: const EdgeInsets.fromLTRB(92, 0, 0, 0),
                         child: Row(
                           children: [
-                            Chip(
+                            ChoiceChip(
                               label: Text('Consult'),
                               avatar: CircleAvatar(
                                 backgroundColor: Colors.green,
@@ -105,44 +153,48 @@ class _TherapistState extends State<Therapist> {
                                   size: 20,
                                 ),
                               ),
+                              selected: selected,
+                              onSelected: (isselected) {
+                                if (isselected) {
+                                  sendemails();
+                                }
+                              },
                             ),
                             SizedBox(
                               width: 20,
                             ),
                             Chip(
-                              label: Text('Follow'),
-                              avatar: CircleAvatar(
-                                backgroundColor: Colors.green,
-                                child: Icon(
-                                  Icons.person_add,
-                                  color: Colors.white,
-                                  size: 20,
+                                label: Text('Follow'),
+                                avatar: CircleAvatar(
+                                  backgroundColor: Colors.green,
+                                  child: Icon(
+                                    Icons.person_add,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
                                 ),
-                              ),
+                                
                             ),
                           ],
                         ),
                       ),
-                      
                       SizedBox(
                         height: 15,
                       ),
                       Divider(
-                        thickness: 15,
-                        indent: 50,
-                        endIndent: 50,
-                        color:Colors.green
-                      )
+                          thickness: 15,
+                          indent: 50,
+                          endIndent: 50,
+                          color: Colors.green)
                     ],
                   ),
                 ),
-                
               ],
             ),
           ),
         ),
       ),
-      body: Myprofile(item:widget.item),
+      body: Myprofile(item: widget.item),
     );
   }
 }
@@ -150,7 +202,7 @@ class _TherapistState extends State<Therapist> {
 class Myprofile extends StatelessWidget {
   final Map<String, dynamic> item;
 
-  const Myprofile({Key? key,required this.item});
+  const Myprofile({Key? key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -186,36 +238,41 @@ class Myprofile extends StatelessWidget {
                 height: 10,
               ),
               ListTile(
-                leading: Icon(Icons.ac_unit_outlined, color: Colors.deepOrange[300]),
+                leading:
+                    Icon(Icons.ac_unit_outlined, color: Colors.deepOrange[300]),
                 shape: Border(),
-                title:
-                    Text('Jobtitle', style: TextStyle(color: Colors.deepOrange[300])),
-                subtitle:
-                    Text('${item['speciality']}', style: TextStyle(color: Colors.white)),
+                title: Text('Jobtitle',
+                    style: TextStyle(color: Colors.deepOrange[300])),
+                subtitle: Text('${item['speciality']}',
+                    style: TextStyle(color: Colors.white)),
                 contentPadding: EdgeInsets.zero,
               ),
               SizedBox(
                 height: 10,
               ),
               ListTile(
-                leading: Icon(Icons.ac_unit_outlined, color: Colors.deepOrange[300],),
+                leading: Icon(
+                  Icons.ac_unit_outlined,
+                  color: Colors.deepOrange[300],
+                ),
                 shape: Border(),
-                title:
-                    Text('About', style: TextStyle(color: Colors.deepOrange[300])),
-                subtitle:
-                    Text('${item['description']}', style: TextStyle(color: Colors.white)),
+                title: Text('About',
+                    style: TextStyle(color: Colors.deepOrange[300])),
+                subtitle: Text('${item['description']}',
+                    style: TextStyle(color: Colors.white)),
                 contentPadding: EdgeInsets.zero,
               ),
               SizedBox(
                 height: 10,
               ),
               ListTile(
-                leading: Icon(Icons.ac_unit_outlined, color: Colors.deepOrange[300]),
+                leading:
+                    Icon(Icons.ac_unit_outlined, color: Colors.deepOrange[300]),
                 shape: Border(),
-                title:
-                    Text('Contact', style: TextStyle(color: Colors.deepOrange[300])),
-                subtitle:
-                    Text('${item['email']}', style: TextStyle(color: Colors.white)),
+                title: Text('Contact',
+                    style: TextStyle(color: Colors.deepOrange[300])),
+                subtitle: Text('${item['email']}',
+                    style: TextStyle(color: Colors.white)),
                 contentPadding: EdgeInsets.zero,
               ),
             ],

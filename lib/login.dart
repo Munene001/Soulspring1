@@ -31,13 +31,44 @@ class _LoginState extends State<Login> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => MyHomePage()));
     } else {
-      print('Failed to login: ${response.statusCode}');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.thumb_down, color: Colors.deepOrange[300]),
+            SizedBox(
+              width: 30,
+            ),
+            Text('Invalid Password or Email')
+          ],
+        ),
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.black.withOpacity(0.5)
+    
+
+      ));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+          child: Text('Login', style: TextStyle(color: Colors.white),),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              const Color.fromARGB(255, 27, 94, 32).withOpacity(0.9),
+                Colors.green.withOpacity(0.9),
+
+            ])
+
+          ),
+
+        ),
+      ),
       body: Center(
         child: Container(
           decoration: BoxDecoration(
