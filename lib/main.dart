@@ -9,7 +9,9 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +110,9 @@ class Bigcard extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  final String userEmail;
+  const MyHomePage({Key? key, required this.userEmail}) : super(key: key);
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -142,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 0:
         return Content();
       case 1:
-        return Search();
+        return Search(userEmail: widget.userEmail);
       // Add more cases as needed for additional icons
       // case 2:
       //   return SomeWidget();

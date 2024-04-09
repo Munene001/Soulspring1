@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 
 class Therapist extends StatefulWidget {
   final Map<String, dynamic> item;
+  final String userEmail;
 
-  const Therapist({Key? key, required this.item});
+
+  const Therapist({Key? key, required this.item, required this.userEmail});
   @override
   State<Therapist> createState() => _TherapistState();
 }
@@ -14,12 +16,14 @@ class Therapist extends StatefulWidget {
 class _TherapistState extends State<Therapist> {
   Future<void> sendemails() async {
     final String therapistEmail = widget.item['email'];
-    final url = Uri.parse('http://192.168.0.108:3000/api/consult');
+    final url = Uri.parse('http://192.168.167.85:3000/api/consult');
 
     final response = await http.post(url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(<String, String>{
           'therapistEmail': therapistEmail,
+          'userEmail': widget.userEmail,
+          
         }));
     if (response.statusCode == 201) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -30,7 +34,7 @@ class _TherapistState extends State<Therapist> {
               width: 30,
             ),
             Text(
-                'Consultation applied Successfully, await response on your email'),
+                'Consultation applied Successfully,'),
           ],
         ),
         duration: Duration(seconds: 1),

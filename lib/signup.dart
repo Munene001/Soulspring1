@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:namer_app/main.dart';
+import 'package:namer_app/login.dart';
+
 import 'Reusableloginwidget.dart';
 
 class Signup extends StatefulWidget {
@@ -20,7 +21,7 @@ class _SignupState extends State<Signup> {
   TextEditingController _passwordTextController = TextEditingController();
 
   Future<void> _signup(BuildContext context) async {
-    final url = Uri.parse('http://192.168.0.108:3000/api/signup');
+    final url = Uri.parse('http://192.168.167.85:3000/api/signup');
     
     final response = await http.post(
       url,
@@ -34,7 +35,7 @@ class _SignupState extends State<Signup> {
     );
     if (response.statusCode == 201) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MyHomePage()));
+          context, MaterialPageRoute(builder: (context) => Login()));
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Row(
           children: [
