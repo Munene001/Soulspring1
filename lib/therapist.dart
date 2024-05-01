@@ -16,7 +16,7 @@ class Therapist extends StatefulWidget {
 class _TherapistState extends State<Therapist> {
   Future<void> sendemails() async {
     final String therapistEmail = widget.item['email'];
-    final url = Uri.parse('http://192.168.167.85:3000/api/consult');
+    final url = Uri.parse('http://192.168.0.106:3000/api/consult');
 
     final response = await http.post(url,
         headers: {'Content-Type': 'application/json'},

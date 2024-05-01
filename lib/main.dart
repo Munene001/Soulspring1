@@ -1,8 +1,8 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'search.dart';
 import 'login.dart';
+import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,79 +31,52 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
-
-  void getNext() {
-    current = WordPair.random();
-    notifyListeners();
-  }
-
-  void toggleFavorite() {
-    List<WordPair> favorites = [];
-    if (favorites.contains(current)) {
-      favorites.remove(current);
-    } else {
-      favorites.add(current);
-    }
-    notifyListeners();
+  @override
+  void notifyListeners() {
+    super.notifyListeners();
   }
 }
 
 class Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text('A random idea:'),
-        Bigcard(pair: pair),
-        SizedBox(height: 10),
-        Row(
-          mainAxisSize: MainAxisSize.min,
+    return Scaffold(
+      appBar: AppBar(
+        title: Center(
+          child: Text(
+            'Mood Journal',
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+        ),
+        automaticallyImplyLeading: false,
+        toolbarHeight: 35,
+        backgroundColor: Colors.grey.withOpacity(0.1),
+      ),
+      body: Container(
+        
+        alignment: Alignment.center,
+        child: Column(
           children: [
-            ElevatedButton(
-                onPressed: () {
-                  appState.toggleFavorite();
-                },
-                child: Text('Like')),
-            SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: () {
-                appState.getNext();
-              },
-              child: Text("Next"),
+            SizedBox(
+              height: 5,
             ),
+            Text(
+              'HOW ARE YOU DOING ?',
+              style: TextStyle(fontSize: 35, color: Colors.green),
+            ),
+            SizedBox(
+              height: 5
+            ),
+            EmojiFeedback(
+              animDuration: const Duration(milliseconds: 300),
+              curve: Curves.bounceIn,
+              inactiveElementScale: .8,
+              onChanged: (value) {
+                print(value);
+              },
+            )
           ],
         ),
-      ],
-    );
-  }
-}
-
-class Bigcard extends StatelessWidget {
-  const Bigcard({
-    super.key,
-    required this.pair,
-  });
-
-  final WordPair pair;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final style = theme.textTheme.displayMedium!.copyWith(
-      color: theme.colorScheme.onPrimary,
-    );
-
-    return Card(
-      color: Colors.deepOrange.shade300,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Text(pair.asLowerCase,
-            style: style, semanticsLabel: "${pair.first} ${pair.second}"),
       ),
     );
   }
@@ -111,7 +84,11 @@ class Bigcard extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   final String userEmail;
-  const MyHomePage({Key? key, required this.userEmail}) : super(key: key);
+
+  const MyHomePage({
+    super.key,
+    required this.userEmail,
+  });
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();

@@ -18,7 +18,7 @@ class _LoginState extends State<Login> {
   TextEditingController _passwordTextController = TextEditingController();
 
   Future<void> _login(BuildContext context) async {
-    final url = Uri.parse('http://192.168.167.85:3000/api/login');
+    final url = Uri.parse('http://192.168.0.106:3000/api/login');
     final response = await http.post(
       url,
       body: jsonEncode({
@@ -31,7 +31,7 @@ class _LoginState extends State<Login> {
       String userEmail = _emailTextController.text;
 
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MyHomePage( userEmail : userEmail)));
+          context, MaterialPageRoute(builder: (context) => MyHomePage( userEmail : userEmail, )));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Row(

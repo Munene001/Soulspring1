@@ -5,7 +5,7 @@ import 'therapist.dart';
 
 class Search extends StatefulWidget {
 final String userEmail;
-  const Search({Key? key, required this.userEmail}) : super(key: key);
+  const Search({super.key, required this.userEmail});
 
   @override
   State<Search> createState() => _SearchState();
@@ -25,7 +25,7 @@ class _SearchState extends State<Search> {
   Future<List<Map<String, dynamic>>> fetchData() async {
     try {
       final response =
-          await http.get(Uri.parse('http://192.168.167.85:3000/api/data'));
+          await http.get(Uri.parse('http://192.168.0.106:3000/api/data'));
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
@@ -89,6 +89,7 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Row(
           children: [
             Expanded(
