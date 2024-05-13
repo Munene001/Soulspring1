@@ -50,32 +50,58 @@ class Content extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
         toolbarHeight: 35,
-        backgroundColor: Colors.grey.withOpacity(0.1),
+        backgroundColor: Colors.green[50]?.withOpacity(0.6),
       ),
       body: Container(
-        
+        color: Colors.green[50],
         alignment: Alignment.center,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              'HOW ARE YOU DOING ?',
-              style: TextStyle(fontSize: 35, color: Colors.green),
-            ),
-            SizedBox(
-              height: 5
-            ),
-            EmojiFeedback(
-              animDuration: const Duration(milliseconds: 300),
-              curve: Curves.bounceIn,
-              inactiveElementScale: .8,
-              onChanged: (value) {
-                print(value);
-              },
-            )
-          ],
+        child: Padding(
+          padding: const EdgeInsetsDirectional.all(8.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                'HOW ARE YOU FEELING?',
+                style: TextStyle(fontSize: 35, color: Colors.blueGrey),
+              ),
+              SizedBox(height: 5),
+              EmojiFeedback(
+                animDuration: const Duration(milliseconds: 300),
+                curve: Curves.bounceIn,
+                inactiveElementScale: .8,
+                onChanged: (value) {
+                  print(value);
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'What is affecting your mood?',
+                  style: TextStyle(fontSize: 25, color: Colors.blueGrey),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Flexible(
+                flex: 1,
+                child: MygridView(),
+              ),
+              
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Let's write about it",
+                  style: TextStyle(fontSize: 25, color: Colors.blueGrey),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -105,6 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
+        selectedItemColor: Colors.green,
         onTap: (int index) {
           setState(() {
             _selectedIndex = index;
@@ -133,5 +160,76 @@ class _MyHomePageState extends State<MyHomePage> {
       default:
         throw UnimplementedError('No widget for index $index');
     }
+  }
+}
+
+class MygridView extends StatefulWidget {
+  const MygridView({super.key});
+
+  @override
+  State<MygridView> createState() => _MygridViewState();
+}
+
+class _MygridViewState extends State<MygridView> {
+  final List<String> items = [
+    'Family',
+    'Work',
+    'Relationship',
+    'Weather',
+    'Health',
+    'Travel',
+    'Finances',
+    'Exercise',
+    'Food',
+    'Hobbies',
+    'Sleep',
+    'Commitments',
+
+    //List<String> selectedItems  = [];
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 4,
+      mainAxisSpacing: 8,
+      crossAxisSpacing: 8,
+      childAspectRatio: 2,
+      children: List.generate(items.length, (index) {
+        //final isSelected = selectedItems.contains(items[index]);
+        return InkWell(
+          onTap: () {
+            setState(
+              () {
+                /* if (isSelected){
+                selectedItems.remove(items[index]);
+              }else{
+                selectedItems.add(items[index]);
+              }*/
+              },
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.horizontal(
+                  left: Radius.circular(20),
+                  right: Radius.circular(20),
+                ),
+                border: Border.all(color: Colors.green)),
+            //color: isSelected ? Colors.deepOrange.withOpacity(0.3) : Colors.transparent,
+            child: Center(
+              child: Text(
+                items[index],
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepOrange),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
   }
 }
