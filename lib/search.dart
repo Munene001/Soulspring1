@@ -197,12 +197,12 @@ class _SearchState extends State<Search> {
               },
               onKisumuPressed: () {
                 setState(() {
-                  searchData = Future.value(filterDataByCity('Nakuru'));
+                  searchData = Future.value(filterDataByCity('Kisumu'));
                 });
               },
               onNakuruPressed: () {
                 setState(() {
-                  searchData = Future.value(filterDataByCity('Kisumu'));
+                  searchData = Future.value(filterDataByCity('Nakuru'));
                 });
               },
               onEldoretPressed: () {

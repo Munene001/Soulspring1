@@ -21,7 +21,7 @@ class _SignupState extends State<Signup> {
   TextEditingController _passwordTextController = TextEditingController();
 
   Future<void> _signup(BuildContext context) async {
-    final url = Uri.parse('http://z192.168.0.106:3000/api/signup');
+    final url = Uri.parse('http://192.168.0.106:3000/api/signup');
     
     final response = await http.post(
       url,
