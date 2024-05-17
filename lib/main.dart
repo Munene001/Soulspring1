@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +8,7 @@ import 'search.dart';
 import 'login.dart';
 import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
 import 'log.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MyApp());
@@ -44,6 +47,8 @@ class MyAppState extends ChangeNotifier {
 }
 
 class Content extends StatefulWidget {
+  final String userEmail;
+  const Content({super.key, required this.userEmail});
   @override
   State<Content> createState() => _ContentState();
 }
@@ -51,6 +56,8 @@ class Content extends StatefulWidget {
 class _ContentState extends State<Content> {
   TextEditingController _dateController = TextEditingController();
   TextEditingController _textController = TextEditingController();
+  List<String> selectedItems = [];
+  String? _emoji;
   Future<void> _selectDate() async {
     DateTime? _picked = await showDatePicker(
       context: context,
@@ -63,6 +70,44 @@ class _ContentState extends State<Content> {
       setState(() {
         _dateController.text = _picked.toString().substring(0, 10);
       });
+    }
+  }
+
+  Future<void> _moodLog(BuildContext context) async {
+    if (_dateController.text.isEmpty || _textController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.thumb_down, color: Colors.deepOrange),
+            SizedBox(width: 30),
+            Text("Neither Date nor Written Diary can be empty")
+          ],
+        ),
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.black.withOpacity(0.5),
+      ));
+      return;
+    }
+    DateTime parsedDate = DateTime.parse(_dateController.text);
+  String formattedDate = "${parsedDate.year}-${parsedDate.month}-${parsedDate.day}";
+    final url = Uri.parse("http://192.168.0.106:3000/api/log");
+    final response = await http.post(url,
+        body: jsonEncode({
+          'journal': _textController.text,
+          'date': formattedDate,
+          'emoji': _emoji,
+          'choice': selectedItems,
+          'email': widget.userEmail
+        }),
+        headers: {'Content-Type': 'application/json'});
+    if (response.statusCode == 201) {
+      setState(() {
+        _textController.clear();
+        selectedItems.clear();
+        _emoji = null;
+      });
+    } else {
+      debugPrint("failed to log mood:${response.statusCode}");
     }
   }
 
@@ -100,7 +145,9 @@ class _ContentState extends State<Content> {
                 curve: Curves.bounceIn,
                 inactiveElementScale: .8,
                 onChanged: (value) {
-                  print(value);
+                  setState(() {
+                    _emoji = value.toString();
+                  });
                 },
               ),
               SizedBox(
@@ -118,7 +165,14 @@ class _ContentState extends State<Content> {
               ),
               Flexible(
                 fit: FlexFit.loose,
-                child: MygridView(),
+                child: MygridView(
+                  selectedItems: selectedItems,
+                  onSelectedItemsChanged: (value) {
+                    setState(() {
+                      selectedItems = value;
+                    });
+                  },
+                ),
               ),
               Row(
                 children: [
@@ -193,7 +247,9 @@ class _ContentState extends State<Content> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _moodLog(context);
+                  },
                   child: Text("Log Today's Mood"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[600],
@@ -252,7 +308,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildPageForIndex(int index) {
     switch (index) {
       case 0:
-        return Content();
+        return Content(userEmail: widget.userEmail);
       case 1:
         return Search(userEmail: widget.userEmail);
       case 2:
@@ -269,7 +325,14 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class MygridView extends StatefulWidget {
-  const MygridView({super.key});
+  final List<String> selectedItems;
+  final ValueChanged<List<String>> onSelectedItemsChanged;
+
+  const MygridView({
+    super.key,
+    required this.selectedItems,
+    required this.onSelectedItemsChanged,
+  });
 
   @override
   State<MygridView> createState() => _MygridViewState();
@@ -289,8 +352,6 @@ class _MygridViewState extends State<MygridView> {
     'Hobbies',
     'Sleep',
     'Commitments',
-
-    List<String> selectedItems  = [];
   ];
 
   @override
@@ -301,16 +362,17 @@ class _MygridViewState extends State<MygridView> {
       crossAxisSpacing: 8,
       childAspectRatio: 2,
       children: List.generate(items.length, (index) {
-        final isSelected = selectedItems.contains(items[index]);
+        final isSelected = widget.selectedItems.contains(items[index]);
         return InkWell(
           onTap: () {
             setState(
               () {
-                 if (isSelected){
-                selectedItems.remove(items[index]);
-              }else{
-                selectedItems.add(items[index]);
-              }
+                if (isSelected) {
+                  widget.selectedItems.remove(items[index]);
+                } else {
+                  widget.selectedItems.add(items[index]);
+                }
+                widget.onSelectedItemsChanged(widget.selectedItems);
               },
             );
           },
@@ -322,14 +384,24 @@ class _MygridViewState extends State<MygridView> {
                   right: Radius.circular(20),
                 ),
                 border: Border.all(color: Colors.green)),
-            //color: isSelected ? Colors.deepOrange.withOpacity(0.3) : Colors.transparent,
-            child: Center(
-              child: Text(
-                items[index],
-                style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.deepOrange),
+            child: Container(
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? Colors.deepOrange.withOpacity(0.2)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.horizontal(
+                  left: Radius.circular(30),
+                  right: Radius.circular(30),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  items[index],
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepOrange),
+                ),
               ),
             ),
           ),
