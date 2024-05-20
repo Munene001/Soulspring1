@@ -38,13 +38,17 @@ Contributions to TherapistConnect are welcome! If you'd like to contribute, plea
 
 For any inquiries or feedback, please contact [Lawrence](lawrencemunenex@gmail.com).
 
+![WhatsApp Image 2024-04-26 at 00 21 32](https://github.com/Munene001/Soulspring1/assets/118843889/7fd0e509-7145-4ec4-bd67-a53c657b5553)
+![WhatsApp Image 2024-04-26 at 00 21 32 (2)](https://github.com/Munene001/Soulspring1/assets/118843889/79f03e10-ba54-4ba4-b6f4-15e5beda356f)
+![WhatsApp Image 2024-04-26 at 00 21 32 (2)](https://github.com/Munene001/Soulspring1/assets/118843889/a619d876-13ba-4456-9a18-afb6818b9ba1)
+![WhatsApp Image 2024-04-26 at 00 21 32 (3)](https://github.com/Munene001/Soulspring1/assets/118843889/afc1609c-0856-49fa-a7ef-67d9659fd21d)
+![WhatsApp Image 2024-05-20 at 13 19 34](https://github.com/Munene001/Soulspring1/assets/118843889/f2b46964-8fed-48ca-b026-cdf13f2c84ac)
 
 
-![Screenshot_20240310_134530](https://github.com/Munene001/Soulspring1/assets/118843889/46ad6c85-cda1-4714-9bab-a5b8e53fae88)
-![WhatsApp Image 2024-05-20 at 13 19 34](https://github.com/Munene001/Soulspring1/assets/118843889/5d3f027f-cbaa-40e2-b4ba-d005102824b4)
-![WhatsApp Image 2024-04-26 at 00 21 32 (6)](https://github.com/Munene001/Soulspring1/assets/118843889/e11964b5-![WhatsApp Image 2024-04-26 at 00 21 32 (5)](https://github.com/Munene001/Soulspring1/assets/118843889/db00daae-1315-4f3d-9c23-4187f3ec793c)
-![WhatsApp Image 2024-04-26 at 00 21 32 (2)](https://github.com/Munene001/Soulspring1/assets/118843889/93e857d6-bf55-4353-b25b-d5529644ed82)
-c54f-4528-9b00-a5f7e9f0c147)
+
+
+
+
 
 
 
